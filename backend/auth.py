@@ -21,6 +21,9 @@ JWT_EXPIRATION_HOURS = 24
 FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000")
 BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:8000")
 
+# Development mode (bypasses CAS authentication)
+DEV_MODE = os.environ.get("DEV_MODE", "true").lower() == "true"
+
 
 def create_access_token(netid: str) -> str:
     """Create a JWT token for authenticated user."""
@@ -47,6 +50,10 @@ def verify_token(token: str) -> Optional[str]:
 
 def get_current_user(request: Request) -> str:
     """Get current authenticated user from request."""
+    # DEV MODE: Skip authentication for testing
+    if DEV_MODE:
+        return "dev_user"
+    
     # Check for auth token in cookie or header
     token = request.cookies.get("auth_token")
     if not token:

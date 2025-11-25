@@ -16,7 +16,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // DEV MODE: Skip authentication for testing
+  const DEV_MODE = process.env.NEXT_PUBLIC_DEV_MODE === 'true';
+
   useEffect(() => {
+    // DEV MODE: Auto-login with fake user
+    if (DEV_MODE) {
+      setUser({ netid: 'dev_user', authenticated: true });
+      setLoading(false);
+      return;
+    }
+
     // Check for auth token in URL (from CAS callback)
     const params = new URLSearchParams(window.location.search);
     const token = params.get('auth_token');

@@ -5,9 +5,30 @@ Complete step-by-step guide to deploy Yalie Search to production with Yale CAS a
 ## Prerequisites
 
 - [ ] GitHub account
-- [ ] Yale NetID
+- [ ] Yale NetID (not required for local testing with DEV_MODE)
 - [ ] Domain name (optional but recommended: `yaliesearch.com`)
 - [ ] `yalie_embedding.json` file (~71MB)
+
+## 🧪 Testing Locally Without Yale CAS
+
+The app includes a **DEV_MODE** that bypasses Yale CAS authentication for local testing:
+
+**Backend** (`backend/.env`):
+```bash
+DEV_MODE=true
+```
+
+**Frontend** (`frontend/.env.local`):
+```bash
+NEXT_PUBLIC_DEV_MODE=true
+```
+
+With DEV_MODE enabled:
+- ✅ No Yale login required
+- ✅ Auto-logged in as `dev_user`
+- ✅ Full search functionality works
+
+**⚠️ Important:** Set `DEV_MODE=false` in production after registering with Yale ITS!
 
 ## Step 1: Prepare Code for Deployment
 
