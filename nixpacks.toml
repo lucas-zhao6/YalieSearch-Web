@@ -1,0 +1,10 @@
+[phases.setup]
+nixPkgs = ["python310", "pip"]
+cmds = ["cd backend && pip install -r requirements.txt"]
+
+[phases.install]
+dependsOn = ["setup"]
+
+[start]
+cmd = "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
+
