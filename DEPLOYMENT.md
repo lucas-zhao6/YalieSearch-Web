@@ -31,9 +31,13 @@ git branch -M main
 git push -u origin main
 ```
 
-### 1.2 Upload Embeddings File
+### 1.2 Prepare Embeddings File
 
-The `yalie_embedding.json` file is too large for git. You'll upload it separately to Railway.
+The embeddings file is already copied to `backend/data/yalie_embedding.json` and will be included in the Docker build.
+
+**Note:** The file is ~71MB. If you encounter issues pushing to GitHub:
+- Use Git LFS: `git lfs track "backend/data/*.json"`
+- Or use a `.gitignore` rule and upload to cloud storage instead
 
 ## Step 2: Deploy Backend to Railway
 
@@ -46,18 +50,7 @@ The `yalie_embedding.json` file is too large for git. You'll upload it separatel
 5. Choose your `yalie-search` repository
 6. Select the `backend` directory
 
-### 2.2 Upload Embeddings File
-
-Railway will deploy but fail initially (missing embeddings file).
-
-1. In Railway dashboard, click on your service
-2. Go to **"Data"** tab
-3. Create a new **Volume**:
-   - Name: `embeddings`
-   - Mount path: `/app/data`
-4. Click on the volume and upload `yalie_embedding.json`
-
-### 2.3 Set Environment Variables
+### 2.2 Set Environment Variables
 
 In Railway dashboard, go to **"Variables"** tab and add:
 
@@ -65,15 +58,16 @@ In Railway dashboard, go to **"Variables"** tab and add:
 JWT_SECRET=your-random-secret-key-here-make-it-long-and-secure
 FRONTEND_URL=https://your-domain.vercel.app
 BACKEND_URL=https://your-project.up.railway.app
-EMBEDDINGS_PATH=/app/data/yalie_embedding.json
 ```
+
+**Note:** `EMBEDDINGS_PATH` is optional - the app will automatically find the embeddings file in the Docker image.
 
 Generate a secure JWT secret:
 ```bash
 python -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
 
-### 2.4 Get Backend URL
+### 2.3 Get Backend URL
 
 After deployment succeeds:
 1. Go to **"Settings"** tab
@@ -338,7 +332,7 @@ git push
 JWT_SECRET=<random-secret>
 FRONTEND_URL=<your-frontend-url>
 BACKEND_URL=<your-backend-url>
-EMBEDDINGS_PATH=/app/data/yalie_embedding.json
+# EMBEDDINGS_PATH is optional - auto-detected from /app/data/yalie_embedding.json
 ```
 
 **Frontend (Vercel):**

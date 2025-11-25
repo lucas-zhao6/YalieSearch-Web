@@ -10,6 +10,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
+# Copy embeddings data
+COPY data/yalie_embedding.json /app/data/yalie_embedding.json
+
 # Expose port (Railway/Render will set PORT env var)
 EXPOSE 8000
 

@@ -15,10 +15,20 @@ from pathlib import Path
 #-------------------------------------------------------------------------#
 
 # Path to the embedding file (relative to this file or absolute)
-EMBEDDINGS_PATH = os.environ.get(
-    "EMBEDDINGS_PATH", 
-    str(Path(__file__).parent.parent.parent / "yalie_search_cli" / "yalie_embedding.json")
-)
+# Try production path first, then fall back to development path
+default_paths = [
+    Path(__file__).parent / "data" / "yalie_embedding.json",  # Production (in Docker)
+    Path(__file__).parent.parent.parent / "yalie_search_cli" / "yalie_embedding.json",  # Development
+]
+
+EMBEDDINGS_PATH = os.environ.get("EMBEDDINGS_PATH")
+if not EMBEDDINGS_PATH:
+    for path in default_paths:
+        if path.exists():
+            EMBEDDINGS_PATH = str(path)
+            break
+    else:
+        EMBEDDINGS_PATH = str(default_paths[0])  # Use first path as fallback
 
 #-------------------------------------------------------------------------#
 # Device Setup

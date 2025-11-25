@@ -51,10 +51,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Data files (embeddings are too large for git)
-*.json
-!package.json
-!package-lock.json
-!tsconfig.json
-!vercel.json
+# Large data files - embeddings file is tracked with Git LFS or committed directly
+# Comment out the line below if you want to commit the embeddings file
+# backend/data/yalie_embedding.json
 
