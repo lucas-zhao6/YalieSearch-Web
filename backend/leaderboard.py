@@ -16,11 +16,13 @@ from pathlib import Path
 # Configuration
 #-------------------------------------------------------------------------#
 
-DATA_DIR = Path(__file__).parent / "data"
-DB_PATH = DATA_DIR / "leaderboard.db"
+# Use separate directory for writable persistent data
+# This allows /app/data to be read-only (embeddings) and /app/persistent to be mounted volume
+PERSISTENT_DIR = Path(__file__).parent / "persistent"
+DB_PATH = PERSISTENT_DIR / "leaderboard.db"
 
-# Ensure data directory exists
-DATA_DIR.mkdir(exist_ok=True)
+# Ensure persistent directory exists
+PERSISTENT_DIR.mkdir(exist_ok=True)
 
 # Thread-local storage for database connections
 _local = threading.local()

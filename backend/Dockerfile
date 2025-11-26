@@ -26,6 +26,10 @@ RUN pip cache purge && \
 # Copy application code
 COPY backend/ .
 
+# Note: /app/data/ contains read-only embeddings (yalie_embedding.json)
+# Runtime persistent data (leaderboard.db, search_analytics.json) goes to /app/persistent/
+# Mount a Railway Volume to /app/persistent/ for data persistence across deployments
+
 # Expose port (Railway/Render will set PORT env var)
 EXPOSE 8000
 

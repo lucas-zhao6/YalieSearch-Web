@@ -55,3 +55,6 @@ yarn-error.log*
 # Comment out the line below if you want to commit the embeddings file
 # backend/data/yalie_embedding.json
 
+# Runtime persistent data (created by app, not committed)
+backend/persistent/
+

@@ -228,8 +228,9 @@ The app stores two types of data that will be **lost on container restarts** wit
 **Option B: Use Railway Volume (Recommended for Production)**
 1. In Railway dashboard, go to project settings
 2. Click **"Add Volume"**
-3. Mount path: `/app/data`
-4. This persists data across deployments
+3. Mount path: `/app/persistent`
+4. This persists `leaderboard.db` and `search_analytics.json` across deployments
+5. Note: `/app/data` contains read-only embeddings and should NOT be mounted
 
 **Option C: Use External Database**
 - Use Railway PostgreSQL addon

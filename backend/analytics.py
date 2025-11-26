@@ -16,11 +16,13 @@ import threading
 # Configuration
 #-------------------------------------------------------------------------#
 
-DATA_DIR = Path(__file__).parent / "data"
-ANALYTICS_FILE = DATA_DIR / "search_analytics.json"
+# Use separate directory for writable persistent data
+# This allows /app/data to be read-only (embeddings) and /app/persistent to be mounted volume
+PERSISTENT_DIR = Path(__file__).parent / "persistent"
+ANALYTICS_FILE = PERSISTENT_DIR / "search_analytics.json"
 
-# Ensure data directory exists
-DATA_DIR.mkdir(exist_ok=True)
+# Ensure persistent directory exists
+PERSISTENT_DIR.mkdir(exist_ok=True)
 
 # Lock for thread-safe file operations
 _file_lock = threading.Lock()
