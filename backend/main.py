@@ -25,6 +25,7 @@ from auth import (
     FRONTEND_URL,
     BACKEND_URL
 )
+from moderation import is_query_allowed
 
 
 @asynccontextmanager
@@ -39,7 +40,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Yalie Search API",
-    description="Search for Yale students by description using CLIP embeddings",
+    description="Find Yalies using AI-powered semantic search with CLIP embeddings",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -145,6 +146,15 @@ async def search_endpoint(
     - **k**: Number of results to return (1-50, default 10)
     """
     print(f"Search by {netid}: {q}")
+    
+    # Content moderation check
+    is_allowed, reason = is_query_allowed(q)
+    if not is_allowed:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Query not allowed: {reason}"
+        )
+    
     results = search(q, k=k)
     return {
         "query": q,

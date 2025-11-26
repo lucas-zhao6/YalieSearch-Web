@@ -1,6 +1,6 @@
 # Yalie Search Web App
 
-A modern web application for searching Yale students by description using AI-powered semantic search with CLIP embeddings.
+A modern web application for finding Yalies using AI-powered semantic search with CLIP embeddings.
 
 ## Architecture
 
@@ -81,6 +81,8 @@ GET /api/search?q=person with glasses&k=10
 - 🎨 **Beautiful UI**: Dark theme with glassmorphism design
 - 📱 **Responsive**: Works on desktop and mobile
 - 🖼️ **Photo Grid**: Visual results with match scores
+- 🔒 **Yale CAS Authentication**: Secure login for Yale students
+- 🛡️ **Content Moderation**: AI-powered filtering of inappropriate queries
 
 ## Tech Stack
 

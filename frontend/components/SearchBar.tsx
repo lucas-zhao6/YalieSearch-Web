@@ -28,11 +28,10 @@ export default function SearchBar({ onSearch, isLoading = false }: SearchBarProp
   };
 
   const suggestions = [
-    "person with glasses",
-    "blonde hair and blue eyes",
-    "wearing a suit",
-    "curly dark hair",
-    "athletic build",
+    "Curly red hair and freckles",
+    "Timothée Chalamet lookalike",
+    "Looks like they give great hugs",
+    "Most likely to start a unicorn startup",
   ];
 
   return (
@@ -52,7 +51,7 @@ export default function SearchBar({ onSearch, isLoading = false }: SearchBarProp
             placeholder="Describe who you're looking for..."
             disabled={isLoading}
             rows={1}
-            className="w-full px-6 py-5 pr-32 text-lg bg-white/5 border border-white/10 rounded-2xl 
+            className="w-full px-6 py-5 pr-40 text-lg bg-white/5 border border-white/10 rounded-2xl 
                        text-white placeholder-white/40
                        focus:outline-none focus:border-yale-blue-light focus:ring-2 focus:ring-yale-blue-light/20
                        transition-all duration-300

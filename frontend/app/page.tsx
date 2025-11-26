@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import SearchBar from '@/components/SearchBar';
 import ResultsGrid from '@/components/ResultsGrid';
+import WelcomeModal from '@/components/WelcomeModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { getAuthToken } from '@/lib/auth';
 
@@ -51,6 +52,14 @@ export default function Home() {
         return;
       }
       
+      if (response.status === 400) {
+        // Content moderation blocked the query
+        const errorData = await response.json();
+        setError(errorData.detail || 'This search query violates our content policy. Please try a different search.');
+        setResults([]);
+        return;
+      }
+      
       if (!response.ok) throw new Error('Search failed');
       
       const data = await response.json();
@@ -90,7 +99,7 @@ export default function Home() {
               <span className="gradient-text">Yalie Search</span>
             </h1>
             <p className="text-white/60 text-lg">
-              AI-powered semantic search for Yale students
+              AI-powered semantic search for Yalies
             </p>
           </div>
 
@@ -125,6 +134,9 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
+      {/* Welcome Modal */}
+      <WelcomeModal />
+
       {/* Header with user info */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-sm border-b border-white/10">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -166,7 +178,7 @@ export default function Home() {
             transition={{ duration: 0.6 }}
           >
             <p className="text-white/60 text-lg md:text-xl max-w-2xl mx-auto mb-12">
-              Find Yale students by describing their appearance using AI-powered semantic search
+              Find Yalies using AI-powered semantic search
             </p>
           </motion.div>
 

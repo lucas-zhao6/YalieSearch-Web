@@ -16,6 +16,7 @@ The app includes a **DEV_MODE** that bypasses Yale CAS authentication for local 
 **Backend** (`backend/.env`):
 ```bash
 DEV_MODE=true
+DISABLE_MODERATION=true
 ```
 
 **Frontend** (`frontend/.env.local`):
@@ -28,7 +29,10 @@ With DEV_MODE enabled:
 - ✅ Auto-logged in as `dev_user`
 - ✅ Full search functionality works
 
-**⚠️ Important:** Set `DEV_MODE=false` in production after registering with Yale ITS!
+**⚠️ Important:** In production:
+- Set `DEV_MODE=false` after registering with Yale ITS
+- Set `DISABLE_MODERATION=false` to enable content filtering
+- Add your `OPENAI_API_KEY` for moderation
 
 ## Step 1: Prepare Code for Deployment
 
@@ -79,9 +83,16 @@ In Railway dashboard, go to **"Variables"** tab and add:
 JWT_SECRET=your-random-secret-key-here-make-it-long-and-secure
 FRONTEND_URL=https://your-domain.vercel.app
 BACKEND_URL=https://your-project.up.railway.app
+OPENAI_API_KEY=your-openai-api-key-here
+DISABLE_MODERATION=false
+DEV_MODE=false
 ```
 
-**Note:** `EMBEDDINGS_PATH` is optional - the app will automatically find the embeddings file in the Docker image.
+**Notes:**
+- `EMBEDDINGS_PATH` is optional - the app will automatically find the embeddings file
+- `OPENAI_API_KEY`: Get from https://platform.openai.com/api-keys (required for content moderation)
+- `DISABLE_MODERATION`: Set to `false` in production to enable content filtering
+- `DEV_MODE`: Set to `false` in production to require Yale CAS authentication
 
 Generate a secure JWT secret:
 ```bash
@@ -105,7 +116,7 @@ After deployment succeeds:
 2. Subject: "CAS Application Registration - Yalie Search"
 3. Include:
    - App name: Yalie Search
-   - App description: AI-powered semantic search for Yale students
+   - App description: AI-powered semantic search for Yalies
    - Callback URL: `https://your-backend.up.railway.app/api/auth/callback`
    - NetID: Your NetID
    - Purpose: Student project
@@ -351,9 +362,12 @@ git push
 **Backend (Railway):**
 ```bash
 JWT_SECRET=<random-secret>
+OPENAI_API_KEY=<your-openai-key>
 FRONTEND_URL=<your-frontend-url>
 BACKEND_URL=<your-backend-url>
-# EMBEDDINGS_PATH is optional - auto-detected from /app/data/yalie_embedding.json
+DISABLE_MODERATION=false
+DEV_MODE=false
+# EMBEDDINGS_PATH is optional - auto-detected
 ```
 
 **Frontend (Vercel):**
