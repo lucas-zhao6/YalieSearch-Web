@@ -2,12 +2,51 @@
 
 Complete step-by-step guide to deploy Yalie Search to production with Yale CAS authentication.
 
+## 🚀 TL;DR - Fastest Path to Deployment
+
+**Easiest approach for beginners:**
+
+1. **Split the repo** into two separate GitHub repos (backend & frontend)
+2. **Deploy backend** to Railway → Just connect the backend repo
+3. **Deploy frontend** to Vercel → Just connect the frontend repo
+4. **Set environment variables** in both platforms
+5. **Enable DEV_MODE** initially to skip Yale CAS setup
+6. **Test locally first** before production
+
+**Skip monorepo complexity!** See **Step 1 - Option B** below for details.
+
+---
+
 ## Prerequisites
 
 - [ ] GitHub account
 - [ ] Yale NetID (not required for local testing with DEV_MODE)
 - [ ] Domain name (optional but recommended: `yaliesearch.com`)
 - [ ] `yalie_embedding.json` file (~71MB)
+- [ ] OpenAI API key (for content moderation - get from https://platform.openai.com)
+
+## Features
+
+The app includes:
+
+### Core Features
+- **AI-powered semantic search** - Find people by describing their appearance
+- **Yale CAS authentication** - Secure login with Yale NetID
+- **Content moderation** - OpenAI GPT-4o-mini filters inappropriate queries
+- **Advanced filters** - Filter by college, year, and major
+- **Find Similar** - Find people who look similar to someone
+
+### Social Features
+- **Leaderboard** - See who appears most in searches (individuals & colleges)
+- **Trending searches** - Popular queries from all users
+- **Search history** - Personal history stored locally in browser
+- **Anonymous mode** - Search without logging to history/analytics
+
+### Technical Features
+- **Lazy loading images** - Efficient image loading for better performance
+- **In-memory caching** - Popular searches cached for speed
+- **Email contact** - Copy-to-clipboard for contacting people
+- **Responsive design** - Works on mobile and desktop
 
 ## 🧪 Testing Locally Without Yale CAS
 
@@ -36,7 +75,12 @@ With DEV_MODE enabled:
 
 ## Step 1: Prepare Code for Deployment
 
-### 1.1 Push to GitHub
+### Option A: Single Repo (Monorepo) - Current Setup
+
+This is the current setup with both `frontend/` and `backend/` in one repository.
+
+**Pros:** Keep everything together, easier to manage  
+**Cons:** Requires configuring root directories in Railway/Vercel
 
 ```bash
 cd yalies_search_web
@@ -56,6 +100,40 @@ git branch -M main
 git push -u origin main
 ```
 
+### Option B: Separate Repos (Simpler for Deployment)
+
+If Railway monorepo configuration is frustrating, split into two repos:
+
+**Backend repo:**
+```bash
+cd yalies_search_web/backend
+git init
+git add .
+git commit -m "Backend - Yalie Search API"
+git remote add origin https://github.com/YOUR_USERNAME/yalie-search-backend.git
+git branch -M main
+git push -u origin main
+```
+
+**Frontend repo:**
+```bash
+cd yalies_search_web/frontend
+git init
+git add .
+git commit -m "Frontend - Yalie Search UI"
+git remote add origin https://github.com/YOUR_USERNAME/yalie-search-frontend.git
+git branch -M main
+git push -u origin main
+```
+
+**Pros:** Railway and Vercel auto-detect everything  
+**Cons:** Need to manage two repos
+
+**If you choose Option B:**
+- Deploy backend repo to Railway (no root directory config needed)
+- Deploy frontend repo to Vercel (no root directory config needed)
+- Skip the "Configure Root Directory" steps below
+
 ### 1.2 Prepare Embeddings File
 
 The embeddings file is already copied to `backend/data/yalie_embedding.json` and will be included in the Docker build.
@@ -73,9 +151,92 @@ The embeddings file is already copied to `backend/data/yalie_embedding.json` and
 3. Click **"New Project"**
 4. Select **"Deploy from GitHub repo"**
 5. Choose your `yalie-search` repository
-6. Select the `backend` directory
+6. Railway will create a service but **it won't work yet** - we need to configure the root directory
 
-### 2.2 Set Environment Variables
+### 2.2 Configure Monorepo for Railway
+
+Since this is a monorepo (both frontend and backend in one repo), Railway needs to know where to find the backend files.
+
+**The Solution:** Use `railway.toml` at the repository ROOT (already created for you!)
+
+The repo now has `railway.toml` at the root that tells Railway:
+- Build using Dockerfile at `backend/Dockerfile`
+- Watch for changes in `backend/**` folder only
+- Start command runs from backend directory
+
+**You don't need to configure anything in the Railway UI!** The `railway.toml` file handles everything automatically.
+
+**If Railway shows build errors:**
+1. Make sure `railway.toml` exists at the **root** of your repo (not inside `backend/`)
+2. Commit and push it:
+   ```bash
+   git add railway.toml
+   git commit -m "Add Railway config for monorepo"
+   git push
+   ```
+3. Railway will automatically redeploy
+
+**Alternative: Deploy Manually**
+
+If the above doesn't work, you can also:
+1. Delete the auto-created service
+2. Click **"+ New"** in your Railway project
+3. Select **"Empty Service"**
+4. Go to Settings → Connect Repo → Select your repo
+5. Set Root Directory to `backend`
+6. Railway will deploy
+
+**Note:** The backend includes a `railway.toml` file that tells Railway how to build and run the app:
+- It will automatically detect the Dockerfile
+- Build command: Docker build from `backend/Dockerfile`
+- Start command: `uvicorn main:app --host 0.0.0.0 --port 8000`
+
+**Visual Guide to Finding Root Directory Setting:**
+
+```
+Railway UI (may vary slightly):
+
+1. Project Dashboard
+   └── Your Service Card (click it)
+       └── Tabs at top: [Deployments] [Metrics] [Variables] [Settings]
+           └── Click [Settings]
+               └── Scroll to "Source" or "Build" section
+                   └── Field: "Root Directory" (or "Watch Paths")
+                       └── Enter: backend
+                       └── Changes save automatically or click "Update"
+```
+
+If you still can't find it, Railway's UI changes frequently. Try:
+- Looking for "Build" or "Source" sections
+- Checking the service's dropdown menu (three dots)
+- Searching Railway's docs for "monorepo" or "root directory"
+
+### ⚠️ 2.1.1 Important: Data Persistence
+
+The app stores two types of data that will be **lost on container restarts** without proper setup:
+
+1. **Leaderboard data** (`data/leaderboard.db`) - SQLite database tracking popular individuals/colleges
+2. **Search analytics** (`data/search_analytics.json`) - Search history and trending queries
+
+**Options:**
+
+**Option A: Accept Data Loss (Simplest)**
+- Leaderboard and analytics reset on each deployment
+- Acceptable for testing/MVP
+- No setup required
+
+**Option B: Use Railway Volume (Recommended for Production)**
+1. In Railway dashboard, go to project settings
+2. Click **"Add Volume"**
+3. Mount path: `/app/data`
+4. This persists data across deployments
+
+**Option C: Use External Database**
+- Use Railway PostgreSQL addon
+- Requires code changes to use PostgreSQL instead of SQLite
+- Most robust but more complex
+
+### 2.3 Set Environment Variables
 
 In Railway dashboard, go to **"Variables"** tab and add:
 
@@ -90,16 +251,19 @@ DEV_MODE=false
 
 **Notes:**
 - `EMBEDDINGS_PATH` is optional - the app will automatically find the embeddings file
-- `OPENAI_API_KEY`: Get from https://platform.openai.com/api-keys (required for content moderation)
+- `OPENAI_API_KEY`: **Required** for content moderation - Get from https://platform.openai.com/api-keys
+  - Uses GPT-4o-mini (~$0.15 per 1M input tokens, very cheap)
+  - Without this, set `DISABLE_MODERATION=true` (not recommended for production)
 - `DISABLE_MODERATION`: Set to `false` in production to enable content filtering
 - `DEV_MODE`: Set to `false` in production to require Yale CAS authentication
+- `JWT_SECRET`: Generate with `python -c "import secrets; print(secrets.token_urlsafe(32))"`
 
 Generate a secure JWT secret:
 ```bash
 python -c "import secrets; print(secrets.token_urlsafe(32))"
 ```
 
-### 2.3 Get Backend URL
+### 2.4 Get Backend URL
 
 After deployment succeeds:
 1. Go to **"Settings"** tab
@@ -142,9 +306,14 @@ Yale ITS will:
 
 ### 4.2 Configure Build Settings
 
-1. **Root Directory:** Set to `frontend`
-2. **Build Command:** `npm run build` (default)
-3. **Output Directory:** `.next` (default)
+**If using monorepo (Option A):**
+1. During import, Vercel will ask for **Framework Preset** → Select "Next.js"
+2. **Root Directory:** Set to `frontend` (there's a dropdown/input field)
+3. **Build Command:** `npm run build` (auto-detected)
+4. **Output Directory:** `.next` (auto-detected)
+
+**If using separate repos (Option B):**
+- Vercel auto-detects everything, just click "Deploy"!
 
 ### 4.3 Set Environment Variables
 
@@ -223,14 +392,60 @@ https://your-backend.up.railway.app/api/auth/callback
 3. Should redirect to Yale CAS login
 4. After login, should redirect back with auth token
 5. Should see your NetID in header
+6. **Welcome modal** should appear with user guide (can be dismissed with "Don't show again")
 
-### 6.2 Test Search
+### 6.2 Test Search Features
 
+**Basic Search:**
 1. Try searching: "person with glasses"
 2. Should return 20 results
 3. Check match scores and images load correctly
 
-### 6.3 Test Logout
+**Filters:**
+1. Click "filters" dropdown below search bar
+2. Select a college, year, or major
+3. Search results should be filtered accordingly
+
+**Find Similar:**
+1. Click "Find Similar" button on any result card
+2. Should show 20 people who look similar
+
+**Contact:**
+1. Click "Contact" button on a result card
+2. Should copy email to clipboard and show "Email copied" toast
+
+### 6.3 Test Content Moderation
+
+1. Try searching inappropriate content (e.g., "ugliest person")
+2. Should be blocked with content policy message
+3. Try neutral descriptors (e.g., "asian person") - should work fine
+
+### 6.4 Test Leaderboard
+
+1. Click "Leaderboard" tab in header
+2. View "Top People" - shows individuals appearing in most unique searches
+3. View "Top Colleges" - shows colleges by member appearances
+4. College logos should display correctly
+
+### 6.5 Test History & Anonymous Mode
+
+**Search History:**
+1. Make a few searches
+2. Click in search bar - history dropdown should appear below
+3. Click a history item to re-search
+
+**Anonymous Mode:**
+1. Toggle "Anonymous Mode" in top right
+2. Make searches - they won't be logged to analytics or leaderboard
+3. Toggle off to resume normal tracking
+
+### 6.6 Test Trending Searches
+
+1. On initial page load, see "Trending Searches" section
+2. Click time period buttons (day/week/month/all)
+3. Click a trending query to search it
+
+### 6.7 Test Logout
 
 1. Click logout button
 2. Should redirect to CAS logout
@@ -304,20 +519,82 @@ git push
 3. Ensure all dependencies in `requirements.txt` are installed
 4. Check memory usage (free tier has limits)
 
+### Leaderboard Always Loading
+
+**Problem:** Leaderboard tab shows perpetual loading
+
+**Solutions:**
+1. Check backend logs for SQLite errors
+2. Verify `data/` directory has write permissions
+3. Check if SQLite database was created successfully
+4. Try a test search first to populate some data
+
+### Content Moderation Blocking Valid Searches
+
+**Problem:** Legitimate searches get blocked
+
+**Solutions:**
+1. Check OpenAI API key is set correctly
+2. Review moderation prompt in `backend/moderation.py`
+3. Temporarily set `DISABLE_MODERATION=true` for testing
+4. Check backend logs for moderation API errors
+
+### Search History Not Appearing
+
+**Problem:** History dropdown is empty
+
+**Solutions:**
+1. Check browser localStorage is enabled
+2. Verify searches were successful (not blocked)
+3. Make sure Anonymous Mode is OFF
+4. Clear browser cache and try again
+
+### Contact Button Not Working
+
+**Problem:** Email doesn't copy to clipboard
+
+**Solutions:**
+1. Check browser permissions for clipboard access
+2. Try on HTTPS (clipboard API requires secure context)
+3. Check browser console for errors
+4. Verify person has email in dataset
+
+### Railway Can't Find Backend Files
+
+**Problem:** Railway deploys but says "No Dockerfile found" or builds the wrong directory
+
+**Solutions:**
+1. Make sure you set **Root Directory** to `backend` in Settings
+2. Check that `backend/Dockerfile` exists in your repo
+3. Verify `backend/railway.toml` is committed to git
+4. Try redeploying after setting root directory
+5. Check Railway logs for build errors
+
+**Alternative Solution - Split into Separate Repos:**
+If Railway continues having issues with the monorepo:
+1. Create a new repo just for backend
+2. Copy `backend/` folder contents to root of new repo
+3. Deploy the new repo to Railway
+4. Keep original repo for frontend on Vercel
+
 ## Cost Breakdown
 
 ### Free Tier (Recommended for MVP)
 
-- **Domain:** $12/year (one-time)
+- **Domain:** $12/year (optional)
 - **Railway:** Free (500 hours/month, $5 credit)
 - **Vercel:** Free (unlimited)
-- **Total first year:** ~$12
+- **OpenAI API:** ~$0.50-2/month for moderation (GPT-4o-mini is very cheap)
+  - Based on ~1,000-5,000 searches/month
+  - Can set usage limits in OpenAI dashboard
+- **Total first year:** ~$12-36 (with domain) or ~$6-24 (without domain)
 
 ### If You Exceed Free Tiers
 
 - **Railway:** $5-20/month (pay for what you use)
 - **Vercel:** Typically stays free unless huge traffic
-- **Total:** ~$60-240/year + domain
+- **OpenAI:** Scales with usage, ~$0.15 per 1M tokens
+- **Total:** ~$72-264/year + domain
 
 ## Security Considerations
 
@@ -332,10 +609,28 @@ git push
 
 ### Data Privacy
 
-- **No data collection:** App doesn't store searches or user activity
-- **CAS only:** Authentication via Yale CAS, no passwords stored
-- **Read-only:** App only reads embeddings, doesn't modify data
-- **Yale only:** Restricted to Yale NetIDs via CAS
+**What's Stored:**
+- **Search analytics** - Query text, timestamp, NetID (for trending searches)
+- **Leaderboard data** - Which people appear in searches (aggregated, no personal search data)
+- **Search history** - Stored locally in browser only (localStorage), not on server
+
+**What's NOT Stored:**
+- Passwords (authentication via Yale CAS)
+- Search results (only query text logged)
+- User profiles or personal info beyond NetID
+
+**Anonymous Mode:**
+- Users can enable Anonymous Mode to prevent logging
+- Searches in anonymous mode don't contribute to analytics or leaderboard
+
+**Data Persistence:**
+- Analytics and leaderboard data stored in backend
+- Without Railway Volume: Data resets on each deployment
+- With Railway Volume: Data persists indefinitely
+
+**Access Control:**
+- Yale only:** Restricted to Yale NetIDs via CAS
+- **Read-only embeddings:** App only reads face data, doesn't modify it
 
 ## Support
 
