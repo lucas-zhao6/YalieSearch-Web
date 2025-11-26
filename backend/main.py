@@ -3,6 +3,7 @@ Yalie Search API - FastAPI Backend
 """
 
 import os
+from typing import Optional
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -15,7 +16,15 @@ from contextlib import asynccontextmanager
 import urllib.parse
 import requests
 
-from search import initialize, search, get_total_count
+from search import (
+    initialize, 
+    search, 
+    find_similar,
+    get_person_by_id,
+    get_filter_options,
+    get_total_count,
+    get_cache_stats
+)
 from auth import (
     get_current_user, 
     create_access_token, 
@@ -26,6 +35,18 @@ from auth import (
     BACKEND_URL
 )
 from moderation import is_query_allowed
+from analytics import (
+    log_search,
+    get_trending_searches,
+    get_search_stats,
+    flush as flush_analytics
+)
+from leaderboard import (
+    record_appearances,
+    get_individual_leaderboard,
+    get_college_leaderboard,
+    get_stats as get_leaderboard_stats
+)
 
 
 @asynccontextmanager
@@ -35,6 +56,8 @@ async def lifespan(app: FastAPI):
     initialize()
     print("API ready!")
     yield
+    # Flush analytics on shutdown
+    flush_analytics()
     print("Shutting down...")
 
 
@@ -64,11 +87,29 @@ app.add_middleware(
 )
 
 
+#-------------------------------------------------------------------------#
+# Health & Info Endpoints
+#-------------------------------------------------------------------------#
+
 @app.get("/api/health")
 async def health():
     """Health check endpoint."""
-    return {"status": "healthy", "total_people": get_total_count()}
+    return {
+        "status": "healthy", 
+        "total_people": get_total_count(),
+        "cache": get_cache_stats()
+    }
 
+
+@app.get("/api/filters")
+async def get_filters():
+    """Get available filter options for college, year, and major."""
+    return get_filter_options()
+
+
+#-------------------------------------------------------------------------#
+# Authentication Endpoints
+#-------------------------------------------------------------------------#
 
 @app.get("/api/auth/login")
 async def login():
@@ -80,35 +121,26 @@ async def login():
 
 @app.get("/api/auth/callback")
 async def auth_callback(ticket: str = Query(...)):
-    """
-    CAS callback endpoint - validates ticket and creates session.
-    """
+    """CAS callback endpoint - validates ticket and creates session."""
     try:
-        # Validate ticket with CAS server
         service_url = f"{BACKEND_URL}/api/auth/callback"
-        validate_url = f"{CAS_SERVER}/serviceValidate?ticket={ticket}&service={urllib.parse.quote(service_url)}"
+        validate_url = (
+            f"{CAS_SERVER}/serviceValidate?"
+            f"ticket={ticket}&service={urllib.parse.quote(service_url)}"
+        )
         
         response = requests.get(validate_url, timeout=10)
         response.raise_for_status()
         
-        # Parse CAS response (XML)
-        # For simplicity, we'll do basic string parsing
-        # In production, use proper XML parser
         if "cas:authenticationSuccess" in response.text:
-            # Extract netid from response
             import re
             match = re.search(r'<cas:user>(.*?)</cas:user>', response.text)
             if match:
                 netid = match.group(1)
-                
-                # Create JWT token
                 token = create_access_token(netid)
-                
-                # Redirect to frontend with token
                 redirect_url = f"{FRONTEND_URL}?auth_token={token}"
                 return RedirectResponse(url=redirect_url)
         
-        # Authentication failed
         raise HTTPException(status_code=401, detail="CAS authentication failed")
         
     except Exception as e:
@@ -132,10 +164,18 @@ async def get_user(netid: str = Depends(get_current_user)):
     }
 
 
+#-------------------------------------------------------------------------#
+# Search Endpoints
+#-------------------------------------------------------------------------#
+
 @app.get("/api/search")
 async def search_endpoint(
     q: str = Query(..., description="Search query"),
-    k: int = Query(10, ge=1, le=50, description="Number of results"),
+    k: int = Query(20, ge=1, le=50, description="Number of results"),
+    college: Optional[str] = Query(None, description="Filter by college"),
+    year: Optional[int] = Query(None, description="Filter by graduation year"),
+    major: Optional[str] = Query(None, description="Filter by major"),
+    anonymous: bool = Query(False, description="Don't log this search"),
     netid: str = Depends(get_current_user)
 ):
     """
@@ -143,7 +183,11 @@ async def search_endpoint(
     Requires authentication.
     
     - **q**: Text description (e.g., "person with glasses and dark hair")
-    - **k**: Number of results to return (1-50, default 10)
+    - **k**: Number of results to return (1-50, default 20)
+    - **college**: Filter by college name (optional)
+    - **year**: Filter by graduation year (optional)
+    - **major**: Filter by major (optional)
+    - **anonymous**: If true, search is not logged for analytics
     """
     print(f"Search by {netid}: {q}")
     
@@ -155,11 +199,124 @@ async def search_endpoint(
             detail=f"Query not allowed: {reason}"
         )
     
-    results = search(q, k=k)
+    results = search(q, k=k, college=college, year=year, major=major)
+    
+    # Log search for analytics (unless anonymous)
+    if not anonymous:
+        log_search(q, user=netid, result_count=len(results))
+        # Record appearances for leaderboard
+        record_appearances(q, results)
+    
     return {
         "query": q,
         "count": len(results),
+        "search_type": "text",
+        "filters": {
+            "college": college,
+            "year": year,
+            "major": major
+        },
         "results": results
+    }
+
+
+@app.get("/api/similar/{person_id}")
+async def similar_endpoint(
+    person_id: str,
+    k: int = Query(10, ge=1, le=50, description="Number of results"),
+    netid: str = Depends(get_current_user)
+):
+    """
+    Find people similar to a specific person.
+    Requires authentication.
+    
+    - **person_id**: The ID of the person to find similar faces to
+    - **k**: Number of results to return (1-50, default 10)
+    """
+    print(f"Find similar to {person_id} by {netid}")
+    
+    # Get person info
+    person = get_person_by_id(person_id)
+    if not person:
+        raise HTTPException(status_code=404, detail="Person not found")
+    
+    results = find_similar(person_id, k=k)
+    
+    return {
+        "person": person,
+        "count": len(results),
+        "search_type": "similar",
+        "results": results
+    }
+
+
+#-------------------------------------------------------------------------#
+# Analytics/Trending Endpoints
+#-------------------------------------------------------------------------#
+
+@app.get("/api/trending")
+async def trending_endpoint(
+    period: str = Query("week", description="Time period: day, week, month, all"),
+    limit: int = Query(10, ge=1, le=50, description="Number of results")
+):
+    """
+    Get trending search queries.
+    
+    - **period**: Time period to analyze (day, week, month, all)
+    - **limit**: Maximum number of results (1-50, default 10)
+    """
+    if period not in ("day", "week", "month", "all"):
+        period = "week"
+    
+    trending = get_trending_searches(period=period, limit=limit)
+    
+    return {
+        "period": period,
+        "trending": trending
+    }
+
+
+@app.get("/api/stats")
+async def stats_endpoint(netid: str = Depends(get_current_user)):
+    """Get search statistics. Requires authentication."""
+    return get_search_stats()
+
+
+#-------------------------------------------------------------------------#
+# Leaderboard Endpoints
+#-------------------------------------------------------------------------#
+
+@app.get("/api/leaderboard/individuals")
+async def leaderboard_individuals_endpoint(
+    limit: int = Query(20, ge=1, le=100, description="Number of results")
+):
+    """
+    Get the individual leaderboard - people who appear most in search results.
+    Each person is counted once per unique query they appear in.
+    
+    - **limit**: Maximum number of results (1-100, default 20)
+    """
+    individuals = get_individual_leaderboard(limit=limit)
+    stats = get_leaderboard_stats()
+    
+    return {
+        "leaderboard": individuals,
+        "stats": stats
+    }
+
+
+@app.get("/api/leaderboard/colleges")
+async def leaderboard_colleges_endpoint():
+    """
+    Get the college leaderboard - colleges ranked by total member appearances.
+    Aggregates individual appearances by college.
+    """
+    colleges = get_college_leaderboard()
+    stats = get_leaderboard_stats()
+    
+    return {
+        "leaderboard": colleges,
+        "stats": stats
     }
 
 

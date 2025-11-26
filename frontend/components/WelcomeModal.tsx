@@ -112,8 +112,19 @@ export default function WelcomeModal() {
                   <li className="flex items-start gap-3">
                     <span className="text-yale-blue-light font-semibold flex-shrink-0">•</span>
                     <div>
-                      <span className="font-semibold text-white">Privacy:</span> All searches are processed securely. No search data is stored 
-                      or shared with third parties.
+                      <span className="font-semibold text-white">Search History & Analytics:</span> Your search history is automatically 
+                      saved locally and used to generate aggregated analytics (e.g., trending searches). 
+                      You can manage your history using "Clear All" or remove individual entries with the 
+                      "X" button. To prevent your searches from contributing to analytics, enable 
+                      <span className="text-purple-300 font-medium"> Anonymous Mode</span> in the header before searching.
+                    </div>
+                  </li>
+
+                  <li className="flex items-start gap-3">
+                    <span className="text-yale-blue-light font-semibold flex-shrink-0">•</span>
+                    <div>
+                      <span className="font-semibold text-white">Data Privacy:</span> All searches are processed securely within the Yale 
+                      community. Search data is not shared with external third parties.
                     </div>
                   </li>
                 </ul>

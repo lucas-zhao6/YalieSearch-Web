@@ -26,6 +26,13 @@ Physical Appearance (positive or neutral):
 - Descriptive: "tall athletic build", "curly red hair", "person with glasses", "big smile"
 - Style: "best dressed", "coolest style", "person who looks put together"
 
+Ethnic/Racial Descriptors (neutral, for face search - ALWAYS ALLOW):
+- Simple descriptors: "asian man", "asian young man", "hispanic girl", "black guy", "white woman", "indian person"
+- Skin tone: "dark skin", "light skin", "brown skin", "tan", "pale"
+- Combined with other features: "asian with glasses", "black woman with curly hair", "hispanic guy tall"
+- These are normal descriptive terms for finding people by appearance - ALLOW them
+- ONLY block actual slurs or outdated offensive terms (see BLOCK section)
+
 Celebrity/Character Comparisons (lookalikes):
 - Attractive celebrities: "looks like Zendaya", "Timothée Chalamet doppelganger"
 - Non-attractive but notable figures: "looks like Donald Trump", "Bernie Sanders lookalike", "Elon Musk twin"
@@ -69,9 +76,12 @@ Criminal/Harmful Implications:
 - "most likely to commit a crime", "school shooter vibes", "looks like a drug dealer"
 - "most likely to drop out", "future convict"
 
-Racial/Ethnic Slurs or Stereotypes:
-- Any racial slurs or negative ethnic stereotypes
-- "terrorist looking", racial profiling terms
+Racial/Ethnic (ONLY actual slurs and negative stereotypes):
+- Actual racial slurs (n-word, c-word for asians, etc.)
+- Negative stereotypes: "terrorist looking", "thug looking", "gang member"
+- Outdated offensive terms: "oriental", "colored", "yellow skin", "redskin"
+- DO NOT block neutral descriptors: "asian", "black", "white", "hispanic", "indian", "middle eastern" are ALLOWED
+- Simple ethnic descriptors + appearance features are for face search and should be ALLOWED
 
 Celebrity Criminals (comparison):
 - "looks like Jeffrey Epstein", "Harvey Weinstein doppelganger", "OJ Simpson twin"
@@ -84,6 +94,10 @@ Context Matters:
 - "looks like Epstein" → BLOCK (criminal)
 - "most attractive" → ALLOW (positive)
 - "ugliest" → BLOCK (derogatory)
+- "asian young man" → ALLOW (neutral ethnic descriptor)
+- "black girl with braids" → ALLOW (neutral descriptor)
+- "hispanic guy" → ALLOW (neutral descriptor)
+- "yellow skin" → BLOCK (outdated offensive term)
 
 Return your response as JSON with this format: {"decision": "ALLOW" or "BLOCK", "reason": "1-2 sentence explanation"}
 
