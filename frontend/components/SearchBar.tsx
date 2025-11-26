@@ -104,8 +104,6 @@ export default function SearchBar({
 
   const handleHistoryClick = (historyQuery: string) => {
     setQuery(historyQuery);
-    addToSearchHistory(historyQuery);
-    setHistory(getSearchHistory());
     onSearch(historyQuery);
     setShowHistory(false);
   };
