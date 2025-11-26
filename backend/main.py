@@ -74,9 +74,24 @@ allowed_origins = [
     "http://127.0.0.1:3000",
 ]
 
-# Add production frontend URL if set
-if FRONTEND_URL and FRONTEND_URL not in allowed_origins:
-    allowed_origins.append(FRONTEND_URL)
+# Add production frontend URLs
+if FRONTEND_URL:
+    # Support comma-separated list of origins
+    frontend_urls = [url.strip() for url in FRONTEND_URL.split(',')]
+    for url in frontend_urls:
+        if url and url not in allowed_origins:
+            allowed_origins.append(url)
+    
+    # Also add www subdomain variant
+    for url in list(allowed_origins):
+        if url.startswith('https://') and not url.startswith('https://www'):
+            www_url = url.replace('https://', 'https://www.')
+            if www_url not in allowed_origins:
+                allowed_origins.append(www_url)
+        elif url.startswith('https://www.'):
+            non_www_url = url.replace('https://www.', 'https://')
+            if non_www_url not in allowed_origins:
+                allowed_origins.append(non_www_url)
 
 app.add_middleware(
     CORSMiddleware,
