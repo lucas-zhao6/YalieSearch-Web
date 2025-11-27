@@ -339,7 +339,7 @@ async def stats_endpoint(netid: str = Depends(get_current_user)):
 
 
 # TEMPORARY ADMIN ENDPOINT - Remove after clearing analytics once
-@app.delete("/api/admin/clear-analytics")
+@app.get("/api/admin/clear-analytics")
 async def clear_analytics_admin(
     secret: str = Query(..., description="Admin secret"),
     netid: str = Depends(get_current_user)
