@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import SearchBar from '@/components/SearchBar';
 import ResultsGrid from '@/components/ResultsGrid';
 import TrendingSearches from '@/components/TrendingSearches';
-import LeaderboardFullView from '@/components/LeaderboardFullView';
+// import LeaderboardFullView from '@/components/LeaderboardFullView'; // COMMENTED OUT - LEADERBOARD FEATURE TEMPORARILY DISABLED
 import WelcomeModal from '@/components/WelcomeModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { getAuthToken } from '@/lib/auth';
@@ -209,7 +209,8 @@ export default function Home() {
               <span className="gradient-text">Yalie Search</span>
             </h1>
             <p className="text-white/60 text-lg">
-              AI-powered semantic search for Yalies
+              {/* AI-powered semantic search for Yalies */}
+              Semantic search for Yalies
             </p>
           </div>
 
@@ -282,6 +283,7 @@ export default function Home() {
                   Search
                 </div>
               </button>
+              {/* LEADERBOARD TAB - TEMPORARILY COMMENTED OUT
               <button
                 onClick={() => setActiveView('leaderboard')}
                 className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
@@ -297,6 +299,7 @@ export default function Home() {
                   Leaderboard
                 </div>
               </button>
+              */}
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -355,7 +358,8 @@ export default function Home() {
                 transition={{ duration: 0.6 }}
               >
                 <p className="text-white/60 text-lg md:text-xl max-w-2xl mx-auto mb-8">
-                  Find Yalies using AI-powered semantic search
+                  {/* Find Yalies using AI-powered semantic search */}
+                  Find Yalies using semantic search
                 </p>
               </motion.div>
 
@@ -435,10 +439,9 @@ export default function Home() {
         </>
       )}
 
-      {/* Leaderboard View */}
+      {/* LEADERBOARD VIEW - TEMPORARILY COMMENTED OUT
       {activeView === 'leaderboard' && (
         <section className="relative pt-32 pb-20 px-4">
-          {/* Background effects */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute top-0 left-1/4 w-96 h-96 bg-yale-blue/20 rounded-full blur-3xl" />
             <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-yale-blue-light/10 rounded-full blur-3xl" />
@@ -449,11 +452,13 @@ export default function Home() {
           </div>
         </section>
       )}
+      */}
 
       {/* Footer */}
       <footer className="py-8 text-center text-white/30 text-sm">
         <p>
-          Powered by CLIP embeddings • Built with Next.js & FastAPI
+          {/* Powered by CLIP embeddings • Built with Next.js & FastAPI */}
+          Built with Next.js & FastAPI
         </p>
       </footer>
     </main>

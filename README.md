@@ -1,6 +1,7 @@
 # Yalie Search
 
-**Find Yalies using AI-powered semantic search**
+<!-- **Find Yalies using AI-powered semantic search** -->
+**Find Yalies using semantic search**
 
 🔗 **Live at:** [www.yaliesearch.com](https://www.yaliesearch.com)
 

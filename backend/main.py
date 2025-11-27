@@ -41,12 +41,13 @@ from analytics import (
     get_search_stats,
     flush as flush_analytics
 )
-from leaderboard import (
-    record_appearances,
-    get_individual_leaderboard,
-    get_college_leaderboard,
-    get_stats as get_leaderboard_stats
-)
+# LEADERBOARD IMPORTS - TEMPORARILY COMMENTED OUT
+# from leaderboard import (
+#     record_appearances,
+#     get_individual_leaderboard,
+#     get_college_leaderboard,
+#     get_stats as get_leaderboard_stats
+# )
 
 
 @asynccontextmanager
@@ -63,7 +64,8 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Yalie Search API",
-    description="Find Yalies using AI-powered semantic search with CLIP embeddings",
+    # description="Find Yalies using AI-powered semantic search with CLIP embeddings",
+    description="Find Yalies using semantic search",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -219,8 +221,8 @@ async def search_endpoint(
     # Log search for analytics (unless anonymous)
     if not anonymous:
         log_search(q, user=netid, result_count=len(results))
-        # Record appearances for leaderboard
-        record_appearances(q, results)
+        # LEADERBOARD - TEMPORARILY COMMENTED OUT
+        # record_appearances(q, results)
     
     return {
         "query": q,
@@ -297,42 +299,43 @@ async def stats_endpoint(netid: str = Depends(get_current_user)):
     return get_search_stats()
 
 
-#-------------------------------------------------------------------------#
-# Leaderboard Endpoints
-#-------------------------------------------------------------------------#
-
-@app.get("/api/leaderboard/individuals")
-async def leaderboard_individuals_endpoint(
-    limit: int = Query(20, ge=1, le=100, description="Number of results")
-):
-    """
-    Get the individual leaderboard - people who appear most in search results.
-    Each person is counted once per unique query they appear in.
-    
-    - **limit**: Maximum number of results (1-100, default 20)
-    """
-    individuals = get_individual_leaderboard(limit=limit)
-    stats = get_leaderboard_stats()
-    
-    return {
-        "leaderboard": individuals,
-        "stats": stats
-    }
-
-
-@app.get("/api/leaderboard/colleges")
-async def leaderboard_colleges_endpoint():
-    """
-    Get the college leaderboard - colleges ranked by total member appearances.
-    Aggregates individual appearances by college.
-    """
-    colleges = get_college_leaderboard()
-    stats = get_leaderboard_stats()
-    
-    return {
-        "leaderboard": colleges,
-        "stats": stats
-    }
+# LEADERBOARD ENDPOINTS - TEMPORARILY COMMENTED OUT
+# #-------------------------------------------------------------------------#
+# # Leaderboard Endpoints
+# #-------------------------------------------------------------------------#
+# 
+# @app.get("/api/leaderboard/individuals")
+# async def leaderboard_individuals_endpoint(
+#     limit: int = Query(20, ge=1, le=100, description="Number of results")
+# ):
+#     """
+#     Get the individual leaderboard - people who appear most in search results.
+#     Each person is counted once per unique query they appear in.
+#     
+#     - **limit**: Maximum number of results (1-100, default 20)
+#     """
+#     individuals = get_individual_leaderboard(limit=limit)
+#     stats = get_leaderboard_stats()
+#     
+#     return {
+#         "leaderboard": individuals,
+#         "stats": stats
+#     }
+# 
+# 
+# @app.get("/api/leaderboard/colleges")
+# async def leaderboard_colleges_endpoint():
+#     """
+#     Get the college leaderboard - colleges ranked by total member appearances.
+#     Aggregates individual appearances by college.
+#     """
+#     colleges = get_college_leaderboard()
+#     stats = get_leaderboard_stats()
+#     
+#     return {
+#         "leaderboard": colleges,
+#         "stats": stats
+#     }
 
 
 if __name__ == "__main__":
