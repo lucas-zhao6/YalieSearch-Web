@@ -338,6 +338,44 @@ async def stats_endpoint(netid: str = Depends(get_current_user)):
 #     }
 
 
+# TEMPORARY ADMIN ENDPOINT - Remove after clearing analytics once
+@app.delete("/api/admin/clear-analytics")
+async def clear_analytics_admin(
+    secret: str = Query(..., description="Admin secret"),
+    netid: str = Depends(get_current_user)
+):
+    """
+    TEMPORARY: Clear analytics data. 
+    Requires authentication + secret.
+    DELETE THIS ENDPOINT AFTER USE!
+    """
+    # Check admin secret
+    admin_secret = os.environ.get("ADMIN_SECRET")
+    if not admin_secret or secret != admin_secret:
+        raise HTTPException(status_code=403, detail="Invalid admin secret")
+    
+    # Clear analytics
+    from analytics import ANALYTICS_FILE, _analytics_data, _loaded
+    import analytics
+    
+    # Clear in-memory data
+    analytics._analytics_data = {"searches": []}
+    analytics._loaded = True
+    
+    # Delete file
+    if ANALYTICS_FILE.exists():
+        ANALYTICS_FILE.unlink()
+        file_deleted = True
+    else:
+        file_deleted = False
+    
+    return {
+        "status": "cleared",
+        "file_deleted": file_deleted,
+        "cleared_by": netid
+    }
+
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
