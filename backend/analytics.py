@@ -2,11 +2,13 @@
 Analytics module for tracking search queries and generating trending data.
 Uses a simple JSON file for lightweight persistence.
 Includes semantic clustering for trending searches using CLIP embeddings.
+User privacy: NetIDs are hashed before storage for pseudonymous analytics.
 """
 
 import os
 import json
 import time
+import hashlib
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 from collections import Counter
@@ -25,6 +27,9 @@ ANALYTICS_FILE = PERSISTENT_DIR / "search_analytics.json"
 
 # Ensure persistent directory exists
 PERSISTENT_DIR.mkdir(exist_ok=True)
+
+# Salt for hashing NetIDs (use JWT_SECRET if available for consistency)
+HASH_SALT = os.environ.get("JWT_SECRET", "default-salt-change-in-production").encode('utf-8')
 
 # Lock for thread-safe file operations
 _file_lock = threading.Lock()
@@ -72,6 +77,22 @@ def _save_analytics():
             json.dump(_analytics_data, f)
 
 
+def _hash_netid(netid: str) -> str:
+    """
+    Hash a NetID for pseudonymous storage.
+    Uses SHA256 with salt for one-way hashing.
+    
+    Args:
+        netid: The user's NetID
+    
+    Returns:
+        Hashed NetID (64 character hex string)
+    """
+    # Combine salt + netid and hash
+    combined = HASH_SALT + netid.encode('utf-8')
+    return hashlib.sha256(combined).hexdigest()
+
+
 def _encode_query(query: str) -> Optional[List[float]]:
     """
     Encode query text using CLIP model for semantic similarity.
@@ -107,6 +128,7 @@ def _encode_query(query: str) -> Optional[List[float]]:
 def log_search(query: str, user: Optional[str] = None, result_count: int = 0):
     """
     Log a search query with cached embedding for semantic clustering.
+    User NetIDs are hashed for privacy (pseudonymous, not anonymous).
     
     Args:
         query: The search query text
@@ -120,10 +142,13 @@ def log_search(query: str, user: Optional[str] = None, result_count: int = 0):
     # Encode query for semantic similarity (cached for trending clustering)
     embedding = _encode_query(query)
     
+    # Hash NetID for privacy (allows unique user counting without storing actual NetID)
+    hashed_user = _hash_netid(user) if user else None
+    
     entry = {
         "query": normalized_query,
         "timestamp": time.time(),
-        "user": user,
+        "user": hashed_user,  # Store hashed NetID instead of raw NetID
         "count": result_count,
     }
     
