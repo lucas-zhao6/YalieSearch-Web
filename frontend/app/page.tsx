@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import SearchBar from '@/components/SearchBar';
 import ResultsGrid from '@/components/ResultsGrid';
-import TrendingSearches from '@/components/TrendingSearches';
+// import TrendingSearches from '@/components/TrendingSearches'; // COMMENTED OUT - TRENDING FEATURE TEMPORARILY DISABLED
 // import LeaderboardFullView from '@/components/LeaderboardFullView'; // COMMENTED OUT - LEADERBOARD FEATURE TEMPORARILY DISABLED
 import WelcomeModal from '@/components/WelcomeModal';
 import { useAuth } from '@/contexts/AuthContext';
@@ -377,13 +377,14 @@ export default function Home() {
                 />
               </motion.div>
 
-              {/* Trending Searches (only show when no results) */}
+              {/* TRENDING SEARCHES - TEMPORARILY COMMENTED OUT
               {!hasSearched && (
                 <TrendingSearches 
                   onSearchClick={handleSearch}
                   disabled={isLoading}
                 />
               )}
+              */}
 
               {/* Error message */}
               {error && (
