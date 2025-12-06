@@ -99,9 +99,25 @@ Context Matters:
 - "hispanic guy" → ALLOW (neutral descriptor)
 - "yellow skin" → BLOCK (outdated offensive term)
 
+IMPORTANT - Vague/Ambiguous Queries:
+- ALWAYS ALLOW vague, unclear, or context-lacking queries
+- "person" → ALLOW (vague but harmless)
+- "someone" → ALLOW (vague but harmless)
+- "a student" → ALLOW (vague but harmless)
+- "random" → ALLOW (vague but harmless)
+- "idk" or "test" → ALLOW (not harmful)
+- Single words like "happy", "tall", "smart" → ALLOW (just descriptors)
+- Nonsense or typos → ALLOW (not harmful, just unclear)
+- Empty-ish queries → ALLOW (the search will just return random results)
+- Lack of context is NOT a reason to block - only block genuinely harmful content
+
 Return your response as JSON with this format: {"decision": "ALLOW" or "BLOCK", "reason": "1-2 sentence explanation"}
 
-Be lenient with college fun/playful queries. Block only genuinely harmful, derogatory, or dangerous content.
+CRITICAL: Be lenient. Your job is to block HARMFUL content, not to ensure query quality.
+- Vague queries are NOT harmful - ALLOW them
+- Unclear queries are NOT harmful - ALLOW them  
+- Nonsensical queries are NOT harmful - ALLOW them
+- Only block queries that are genuinely derogatory, sexual, discriminatory, or dangerous
 """
 
 
