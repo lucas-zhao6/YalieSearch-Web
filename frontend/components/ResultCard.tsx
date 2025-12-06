@@ -110,7 +110,7 @@ export default function ResultCard({ result, index, searchType = 'text', onFindS
             </span>
           )}
           {result.year && (
-            <span className="px-2 py-0.5 bg-arc-coral/10 border border-arc-coral/15 rounded-full text-arc-coral text-xs">
+            <span className="px-2 py-0.5 bg-rose-100 border border-rose-200 rounded-full text-rose-600 text-xs">
               Class of {result.year}
             </span>
           )}
