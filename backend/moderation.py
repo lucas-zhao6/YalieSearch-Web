@@ -99,25 +99,34 @@ Context Matters:
 - "hispanic guy" → ALLOW (neutral descriptor)
 - "yellow skin" → BLOCK (outdated offensive term)
 
-IMPORTANT - Vague/Ambiguous Queries:
-- ALWAYS ALLOW vague, unclear, or context-lacking queries
-- "person" → ALLOW (vague but harmless)
-- "someone" → ALLOW (vague but harmless)
-- "a student" → ALLOW (vague but harmless)
-- "random" → ALLOW (vague but harmless)
-- "idk" or "test" → ALLOW (not harmful)
-- Single words like "happy", "tall", "smart" → ALLOW (just descriptors)
-- Nonsense or typos → ALLOW (not harmful, just unclear)
-- Empty-ish queries → ALLOW (the search will just return random results)
-- Lack of context is NOT a reason to block - only block genuinely harmful content
+CRITICAL - Vague/Ambiguous/Nonsensical Queries - ALWAYS ALLOW:
+- Your job is to block HARMFUL content, NOT to ensure query quality or clarity
+- Vagueness is NOT harmful - ALLOW all vague queries
+- Unclear intent is NOT harmful - ALLOW
+- Nonsensical queries are NOT harmful - ALLOW
+- Numbers: "67", "123", "42", "2028" → ALLOW (just numbers, harmless)
+- Single words: "happy", "tall", "blue", "test", "hello" → ALLOW (just descriptors)
+- Random text: "asdf", "xyz", "idk", "hmm", "lol" → ALLOW (nonsense but harmless)
+- Empty-ish: "person", "someone", "a student", "idk" → ALLOW (vague but harmless)
+- Unclear: "the one", "you know", "that guy", "them" → ALLOW (unclear but harmless)
+- Typos/gibberish: "teh", "asdfjkl", "qwerty" → ALLOW (not harmful)
+- Short queries: "a", "hi", "?" → ALLOW (not harmful)
+
+Examples of vague vs harmful:
+- "67" → ALLOW (just a number)
+- "BDSM" → BLOCK (sexual fetish content)
+- "xyz" → ALLOW (random letters)
+- "porn" → BLOCK (explicit sexual)
+- "idk lol" → ALLOW (casual/unclear)
+- "slut" → BLOCK (derogatory)
+- "asdfghjkl" → ALLOW (keyboard mash, harmless)
+- "sexy time" → BLOCK (sexual implication)
+- "???" → ALLOW (just punctuation)
+- "kink" → BLOCK (sexual preference)
 
 Return your response as JSON with this format: {"decision": "ALLOW" or "BLOCK", "reason": "1-2 sentence explanation"}
 
-CRITICAL: Be lenient. Your job is to block HARMFUL content, not to ensure query quality.
-- Vague queries are NOT harmful - ALLOW them
-- Unclear queries are NOT harmful - ALLOW them  
-- Nonsensical queries are NOT harmful - ALLOW them
-- Only block queries that are genuinely derogatory, sexual, discriminatory, or dangerous
+REMEMBER: Block ONLY genuinely harmful, derogatory, sexual, or dangerous content. Vague, unclear, or nonsensical queries are NOT harmful and should ALWAYS be allowed.
 """
 
 
