@@ -107,7 +107,7 @@ Be lenient with college fun/playful queries. Block only genuinely harmful, derog
 
 def moderate_query(query: str) -> Dict[str, str]:
     """
-    Check if a search query is appropriate.
+    Check if a search query is appropriate (sync version).
     
     Args:
         query: The search query to moderate
@@ -148,11 +148,70 @@ def moderate_query(query: str) -> Dict[str, str]:
         return {"decision": "ALLOW", "reason": "Moderation check failed"}
 
 
+async def moderate_query_async(query: str) -> Dict[str, str]:
+    """
+    Check if a search query is appropriate (async version for parallel execution).
+    
+    Args:
+        query: The search query to moderate
+        
+    Returns:
+        Dict with 'decision' (ALLOW/BLOCK) and 'reason'
+    """
+    import asyncio
+    
+    # DEV MODE: Skip moderation
+    if DISABLE_MODERATION:
+        return {"decision": "ALLOW", "reason": "Moderation disabled (dev mode)"}
+    
+    # If no API key, allow by default (fail open)
+    if not client:
+        print("WARNING: No OpenAI API key configured, moderation disabled")
+        return {"decision": "ALLOW", "reason": "Moderation unavailable"}
+    
+    try:
+        # Run the blocking OpenAI call in a thread pool to not block the event loop
+        loop = asyncio.get_event_loop()
+        response = await loop.run_in_executor(
+            None,
+            lambda: client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": MODERATION_PROMPT},
+                    {"role": "user", "content": f'Query to moderate: "{query}"'}
+                ],
+                temperature=0,
+                max_tokens=100,
+                response_format={"type": "json_object"}
+            )
+        )
+        
+        result = json.loads(response.choices[0].message.content)
+        return {
+            "decision": result.get("decision", "BLOCK"),
+            "reason": result.get("reason", "Content policy check")
+        }
+        
+    except Exception as e:
+        print(f"Moderation error: {e}")
+        # Fail open - allow query if moderation fails
+        return {"decision": "ALLOW", "reason": "Moderation check failed"}
+
+
 def is_query_allowed(query: str) -> tuple[bool, str]:
     """
-    Simple wrapper that returns (allowed: bool, reason: str)
+    Simple wrapper that returns (allowed: bool, reason: str) - sync version
     """
     result = moderate_query(query)
+    is_allowed = result["decision"] == "ALLOW"
+    return is_allowed, result["reason"]
+
+
+async def is_query_allowed_async(query: str) -> tuple[bool, str]:
+    """
+    Simple wrapper that returns (allowed: bool, reason: str) - async version
+    """
+    result = await moderate_query_async(query)
     is_allowed = result["decision"] == "ALLOW"
     return is_allowed, result["reason"]
 
