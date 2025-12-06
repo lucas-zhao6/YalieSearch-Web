@@ -61,7 +61,7 @@ export default function ResultCard({ result, index, searchType = 'text', onFindS
     >
       {/* Rank badge */}
       <div className="absolute top-3 left-3 z-10">
-        <div className="w-7 h-7 rounded-full bg-gradient-to-br from-arc-teal to-arc-teal-dark shadow-button flex items-center justify-center text-white font-bold text-xs">
+        <div className="w-7 h-7 rounded-full bg-arc-teal flex items-center justify-center text-white font-bold text-xs shadow-lg ring-2 ring-white/80">
           #{index + 1}
         </div>
       </div>
