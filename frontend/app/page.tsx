@@ -188,8 +188,8 @@ export default function Home() {
     return (
       <main className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-yale-blue border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-white/60">Loading...</p>
+          <div className="w-16 h-16 border-4 border-arc-teal border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-arc-slate-muted">Loading...</p>
         </div>
       </main>
     );
@@ -208,25 +208,26 @@ export default function Home() {
             <h1 className="font-display text-5xl md:text-6xl font-bold mb-4">
               <span className="gradient-text">Yalie Search</span>
             </h1>
-            <p className="text-white/60 text-lg">
-              {/* AI-powered semantic search for Yalies */}
+            <p className="text-arc-slate-light text-lg">
               Semantic search for Yalies
             </p>
           </div>
 
-          <div className="glass rounded-2xl p-8 mb-6">
-            <svg className="w-20 h-20 mx-auto mb-4 text-yale-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-            <h2 className="text-xl text-white font-semibold mb-2">
+          <div className="glass-solid rounded-3xl p-8 mb-6">
+            <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-arc-teal to-arc-teal-dark flex items-center justify-center">
+              <svg className="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <h2 className="text-xl text-arc-slate font-semibold mb-2">
               Yale CAS Login Required
             </h2>
-            <p className="text-white/60 mb-6">
+            <p className="text-arc-slate-light mb-6">
               Please sign in with your Yale NetID to access Yalie Search
             </p>
             <button
               onClick={login}
-              className="px-8 py-3 bg-yale-blue hover:bg-yale-blue-light text-white font-semibold rounded-xl transition-all duration-300 inline-flex items-center gap-2"
+              className="px-8 py-3 btn-primary font-semibold rounded-xl transition-all duration-300 inline-flex items-center gap-2"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
@@ -235,7 +236,7 @@ export default function Home() {
             </button>
           </div>
 
-          <p className="text-white/40 text-sm">
+          <p className="text-arc-slate-muted text-sm">
             Restricted to Yale University students and affiliates
           </p>
         </motion.div>
@@ -249,7 +250,7 @@ export default function Home() {
       <WelcomeModal />
 
       {/* Header with user info */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-sm border-b border-white/10">
+      <header className="fixed top-0 left-0 right-0 z-50 glass-subtle border-b border-white/30">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button 
@@ -267,13 +268,13 @@ export default function Home() {
             </button>
             
             {/* Tab Navigation */}
-            <div className="flex items-center gap-1 bg-white/5 rounded-xl p-1">
+            <div className="flex items-center gap-1 bg-white/30 backdrop-blur-sm rounded-xl p-1 border border-white/40">
               <button
                 onClick={() => setActiveView('search')}
                 className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                   activeView === 'search'
-                    ? 'bg-yale-blue text-white shadow-lg'
-                    : 'text-white/60 hover:text-white hover:bg-white/5'
+                    ? 'bg-white/80 text-arc-teal shadow-soft'
+                    : 'text-arc-slate-light hover:text-arc-slate hover:bg-white/40'
                 }`}
               >
                 <div className="flex items-center gap-1.5">
@@ -288,8 +289,8 @@ export default function Home() {
                 onClick={() => setActiveView('leaderboard')}
                 className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                   activeView === 'leaderboard'
-                    ? 'bg-yale-blue text-white shadow-lg'
-                    : 'text-white/60 hover:text-white hover:bg-white/5'
+                    ? 'bg-white/80 text-arc-teal shadow-soft'
+                    : 'text-arc-slate-light hover:text-arc-slate hover:bg-white/40'
                 }`}
               >
                 <div className="flex items-center gap-1.5">
@@ -308,8 +309,8 @@ export default function Home() {
               onClick={toggleAnonymousMode}
               className={`px-3 py-1.5 text-xs rounded-full transition-all duration-200 inline-flex items-center gap-1.5 ${
                 anonymousMode 
-                  ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' 
-                  : 'bg-white/5 text-white/50 border border-white/10 hover:bg-white/10'
+                  ? 'bg-arc-coral/20 text-arc-coral border border-arc-coral/30' 
+                  : 'bg-white/40 text-arc-slate-light border border-white/50 hover:bg-white/60'
               }`}
               title={anonymousMode ? 'Anonymous mode ON - searches not saved' : 'Anonymous mode OFF - searches saved to history'}
             >
@@ -323,12 +324,12 @@ export default function Home() {
               {anonymousMode ? 'Anonymous' : 'Normal'}
             </button>
 
-            <div className="text-sm text-white/60">
-              Welcome, <span className="text-white font-semibold">{user.netid}</span>
+            <div className="text-sm text-arc-slate-light">
+              Welcome, <span className="text-arc-slate font-semibold">{user.netid}</span>
             </div>
             <button
               onClick={logout}
-              className="px-4 py-2 text-sm bg-white/5 hover:bg-white/10 text-white/80 hover:text-white rounded-lg transition-all duration-200 inline-flex items-center gap-2"
+              className="px-4 py-2 text-sm bg-white/50 hover:bg-white/70 text-arc-slate-light hover:text-arc-slate rounded-xl transition-all duration-200 inline-flex items-center gap-2 border border-white/60"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -344,10 +345,11 @@ export default function Home() {
         <>
           {/* Hero Section */}
           <section className="relative pt-32 pb-8 px-4">
-            {/* Background effects */}
+            {/* Decorative background elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className="absolute top-0 left-1/4 w-96 h-96 bg-yale-blue/20 rounded-full blur-3xl" />
-              <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-yale-blue-light/10 rounded-full blur-3xl" />
+              <div className="absolute top-20 left-1/4 w-72 h-72 bg-arc-teal/10 rounded-full blur-3xl animate-float" />
+              <div className="absolute top-40 right-1/4 w-96 h-96 bg-arc-coral/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '-3s' }} />
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-64 bg-arc-mint/20 rounded-full blur-3xl" />
             </div>
 
             <div className="relative z-10 max-w-4xl mx-auto text-center">
@@ -357,8 +359,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
               >
-                <p className="text-white/60 text-lg md:text-xl max-w-2xl mx-auto mb-8">
-                  {/* Find Yalies using AI-powered semantic search */}
+                <p className="text-arc-slate-light text-lg md:text-xl max-w-2xl mx-auto mb-8">
                   Find Yalies using semantic search
                 </p>
               </motion.div>
@@ -391,7 +392,7 @@ export default function Home() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-300"
+                  className="mt-4 p-4 bg-arc-coral/10 border border-arc-coral/20 rounded-xl text-arc-coral"
                 >
                   {error}
                 </motion.div>
@@ -406,9 +407,9 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               className="max-w-5xl mx-auto px-4 mb-4"
             >
-              <div className="flex items-center justify-between p-3 bg-yale-blue/10 border border-yale-blue/20 rounded-xl">
-                <span className="text-white/70 text-sm">
-                  Showing people similar to <span className="text-yale-blue-light font-semibold">{similarTo.name}</span>
+              <div className="flex items-center justify-between p-3 bg-arc-teal/10 border border-arc-teal/20 rounded-xl">
+                <span className="text-arc-slate-light text-sm">
+                  Showing people similar to <span className="text-arc-teal font-semibold">{similarTo.name}</span>
                 </span>
                 <button
                   onClick={() => {
@@ -416,7 +417,7 @@ export default function Home() {
                     setResults([]);
                     setHasSearched(false);
                   }}
-                  className="text-white/50 hover:text-white text-sm"
+                  className="text-arc-slate-muted hover:text-arc-slate text-sm"
                 >
                   Clear
                 </button>
@@ -444,8 +445,8 @@ export default function Home() {
       {activeView === 'leaderboard' && (
         <section className="relative pt-32 pb-20 px-4">
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-0 left-1/4 w-96 h-96 bg-yale-blue/20 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-yale-blue-light/10 rounded-full blur-3xl" />
+            <div className="absolute top-20 left-1/4 w-72 h-72 bg-arc-teal/10 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-arc-coral/10 rounded-full blur-3xl" />
           </div>
 
           <div className="relative z-10 max-w-5xl mx-auto">
@@ -456,9 +457,8 @@ export default function Home() {
       */}
 
       {/* Footer */}
-      <footer className="py-8 text-center text-white/30 text-sm">
+      <footer className="py-8 text-center text-arc-slate-muted text-sm">
         <p>
-          {/* Powered by CLIP embeddings • Built with Next.js & FastAPI */}
           Built with Next.js & FastAPI
         </p>
       </footer>

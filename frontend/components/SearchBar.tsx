@@ -142,7 +142,7 @@ export default function SearchBar({
       {/* Wrapper for click-outside detection */}
       <div ref={wrapperRef} className="relative">
         {/* Main Search Card */}
-        <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
+        <div className="glass-solid rounded-3xl overflow-hidden shadow-glass-lg">
           <form onSubmit={handleSubmit} className="relative">
             <div className="relative">
               <textarea
@@ -163,7 +163,7 @@ export default function SearchBar({
                 disabled={isLoading}
                 rows={1}
                 className="w-full px-6 py-5 pr-40 text-lg bg-transparent
-                           text-white placeholder-white/40
+                           text-arc-slate placeholder-arc-slate-muted
                            focus:outline-none
                            transition-all duration-300
                            disabled:opacity-50 disabled:cursor-not-allowed
@@ -174,8 +174,8 @@ export default function SearchBar({
                 type="submit"
                 disabled={isLoading || !query.trim()}
                 className="absolute right-3 top-1/2 -translate-y-1/2
-                           px-6 py-2.5 bg-yale-blue hover:bg-yale-blue-light
-                           text-white font-medium rounded-xl
+                           px-6 py-2.5 btn-primary
+                           font-medium rounded-xl
                            transition-all duration-300
                            disabled:opacity-50 disabled:cursor-not-allowed
                            flex items-center gap-2"
@@ -208,13 +208,13 @@ export default function SearchBar({
               disabled={isLoading || filterOptionsLoading}
               className={`text-xs transition-colors inline-flex items-center gap-1 ${
                 filtersExpanded || activeFilterCount > 0
-                  ? 'text-yale-blue-light'
-                  : 'text-white/40 hover:text-white/60'
+                  ? 'text-arc-teal'
+                  : 'text-arc-slate-muted hover:text-arc-slate-light'
               } disabled:opacity-50`}
             >
               filters
               {activeFilterCount > 0 && (
-                <span className="px-1.5 py-0.5 text-[10px] bg-yale-blue/30 rounded-full">
+                <span className="px-1.5 py-0.5 text-[10px] bg-arc-teal/20 text-arc-teal rounded-full">
                   {activeFilterCount}
                 </span>
               )}
@@ -231,7 +231,7 @@ export default function SearchBar({
               <button
                 type="button"
                 onClick={clearAllFilters}
-                className="ml-2 text-xs text-white/30 hover:text-red-400 transition-colors"
+                className="ml-2 text-xs text-arc-slate-muted hover:text-arc-coral transition-colors"
               >
                 clear
               </button>
@@ -248,11 +248,11 @@ export default function SearchBar({
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <div className="px-4 pb-4 pt-3 border-t border-white/10">
+                <div className="px-4 pb-4 pt-3 border-t border-arc-teal/10">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     {/* College Filter */}
                     <div>
-                      <label className="block text-[10px] text-white/40 mb-1.5 uppercase tracking-wider">
+                      <label className="block text-[10px] text-arc-slate-muted mb-1.5 uppercase tracking-wider">
                         College
                       </label>
                       <select
@@ -262,9 +262,9 @@ export default function SearchBar({
                           college: e.target.value || null
                         })}
                         disabled={isLoading}
-                        className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg 
-                                 text-white text-sm focus:outline-none focus:border-yale-blue-light
-                                 disabled:opacity-50 cursor-pointer"
+                        className="w-full px-3 py-2 bg-white/60 border border-white/80 rounded-xl 
+                                 text-arc-slate text-sm focus:outline-none focus:border-arc-teal focus:ring-2 focus:ring-arc-teal/20
+                                 disabled:opacity-50 cursor-pointer transition-all"
                       >
                         <option value="">All Colleges</option>
                         {filterOptions.colleges.map((college) => (
@@ -275,7 +275,7 @@ export default function SearchBar({
 
                     {/* Year Filter */}
                     <div>
-                      <label className="block text-[10px] text-white/40 mb-1.5 uppercase tracking-wider">
+                      <label className="block text-[10px] text-arc-slate-muted mb-1.5 uppercase tracking-wider">
                         Class Year
                       </label>
                       <select
@@ -285,9 +285,9 @@ export default function SearchBar({
                           year: e.target.value ? parseInt(e.target.value) : null
                         })}
                         disabled={isLoading}
-                        className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg 
-                                 text-white text-sm focus:outline-none focus:border-yale-blue-light
-                                 disabled:opacity-50 cursor-pointer"
+                        className="w-full px-3 py-2 bg-white/60 border border-white/80 rounded-xl 
+                                 text-arc-slate text-sm focus:outline-none focus:border-arc-teal focus:ring-2 focus:ring-arc-teal/20
+                                 disabled:opacity-50 cursor-pointer transition-all"
                       >
                         <option value="">All Years</option>
                         {filterOptions.years.map((year) => (
@@ -298,7 +298,7 @@ export default function SearchBar({
 
                     {/* Major Filter */}
                     <div>
-                      <label className="block text-[10px] text-white/40 mb-1.5 uppercase tracking-wider">
+                      <label className="block text-[10px] text-arc-slate-muted mb-1.5 uppercase tracking-wider">
                         Major
                       </label>
                       <select
@@ -308,9 +308,9 @@ export default function SearchBar({
                           major: e.target.value || null
                         })}
                         disabled={isLoading}
-                        className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg 
-                                 text-white text-sm focus:outline-none focus:border-yale-blue-light
-                                 disabled:opacity-50 cursor-pointer"
+                        className="w-full px-3 py-2 bg-white/60 border border-white/80 rounded-xl 
+                                 text-arc-slate text-sm focus:outline-none focus:border-arc-teal focus:ring-2 focus:ring-arc-teal/20
+                                 disabled:opacity-50 cursor-pointer transition-all"
                       >
                         <option value="">All Majors</option>
                         {filterOptions.majors.map((major) => (
@@ -326,7 +326,7 @@ export default function SearchBar({
                       <button
                         type="button"
                         onClick={clearAllFilters}
-                        className="text-xs text-white/40 hover:text-red-400 transition-colors"
+                        className="text-xs text-arc-slate-muted hover:text-arc-coral transition-colors"
                       >
                         Clear all filters
                       </button>
@@ -345,12 +345,12 @@ export default function SearchBar({
               className="flex flex-wrap gap-2 px-4 pb-3 justify-center"
             >
               {filters.college && (
-                <span className="px-2.5 py-1 text-xs bg-yale-blue/20 text-yale-blue-light 
-                               rounded-full inline-flex items-center gap-1">
+                <span className="px-2.5 py-1 text-xs bg-arc-teal/15 text-arc-teal-dark 
+                               rounded-full inline-flex items-center gap-1 border border-arc-teal/20">
                   {filters.college}
                   <button 
                     onClick={() => onFiltersChange({ ...filters, college: null })}
-                    className="hover:text-white"
+                    className="hover:text-arc-coral"
                   >
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -359,12 +359,12 @@ export default function SearchBar({
                 </span>
               )}
               {filters.year && (
-                <span className="px-2.5 py-1 text-xs bg-yale-blue/20 text-yale-blue-light 
-                               rounded-full inline-flex items-center gap-1">
+                <span className="px-2.5 py-1 text-xs bg-arc-teal/15 text-arc-teal-dark 
+                               rounded-full inline-flex items-center gap-1 border border-arc-teal/20">
                   Class of {filters.year}
                   <button 
                     onClick={() => onFiltersChange({ ...filters, year: null })}
-                    className="hover:text-white"
+                    className="hover:text-arc-coral"
                   >
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -373,12 +373,12 @@ export default function SearchBar({
                 </span>
               )}
               {filters.major && (
-                <span className="px-2.5 py-1 text-xs bg-yale-blue/20 text-yale-blue-light 
-                               rounded-full inline-flex items-center gap-1 max-w-[180px] truncate">
+                <span className="px-2.5 py-1 text-xs bg-arc-teal/15 text-arc-teal-dark 
+                               rounded-full inline-flex items-center gap-1 max-w-[180px] truncate border border-arc-teal/20">
                   {filters.major}
                   <button 
                     onClick={() => onFiltersChange({ ...filters, major: null })}
-                    className="hover:text-white flex-shrink-0"
+                    className="hover:text-arc-coral flex-shrink-0"
                   >
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -398,14 +398,14 @@ export default function SearchBar({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.15 }}
-              className="absolute top-full left-0 right-0 mt-2 py-2 bg-gray-900/95 backdrop-blur-lg border border-white/10 rounded-xl shadow-2xl z-50 max-h-64 overflow-y-auto"
+              className="absolute top-full left-0 right-0 mt-2 py-2 glass-solid rounded-2xl shadow-glass-lg z-50 max-h-64 overflow-y-auto"
             >
-              <div className="flex items-center justify-between px-4 py-2 border-b border-white/10">
-                <span className="text-xs text-white/50 font-medium uppercase tracking-wider">Recent Searches</span>
+              <div className="flex items-center justify-between px-4 py-2 border-b border-arc-teal/10">
+                <span className="text-xs text-arc-slate-muted font-medium uppercase tracking-wider">Recent Searches</span>
                 <button
                   type="button"
                   onClick={handleClearHistory}
-                  className="text-xs text-white/40 hover:text-red-400 transition-colors"
+                  className="text-xs text-arc-slate-muted hover:text-arc-coral transition-colors"
                 >
                   Clear all
                 </button>
@@ -416,20 +416,20 @@ export default function SearchBar({
                   key={index}
                   type="button"
                   onClick={() => handleHistoryClick(item.query)}
-                  className="w-full px-4 py-2.5 flex items-center justify-between gap-2 text-left hover:bg-white/5 transition-colors group"
+                  className="w-full px-4 py-2.5 flex items-center justify-between gap-2 text-left hover:bg-arc-teal/5 transition-colors group"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <svg className="w-4 h-4 text-white/30 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 text-arc-slate-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span className="text-white/80 truncate">{item.query}</span>
+                    <span className="text-arc-slate truncate">{item.query}</span>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
-                    <span className="text-xs text-white/30">{formatRelativeTime(item.timestamp)}</span>
+                    <span className="text-xs text-arc-slate-muted">{formatRelativeTime(item.timestamp)}</span>
                     <button
                       type="button"
                       onClick={(e) => handleRemoveHistory(e, item.query)}
-                      className="p-1 text-white/20 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-all"
+                      className="p-1 text-arc-slate-muted hover:text-arc-coral opacity-0 group-hover:opacity-100 transition-all"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -450,7 +450,7 @@ export default function SearchBar({
         transition={{ delay: 0.3 }}
         className="flex flex-wrap gap-2 mt-4 justify-center"
       >
-        <span className="text-white/40 text-sm">Try:</span>
+        <span className="text-arc-slate-muted text-sm">Try:</span>
         {suggestions.map((suggestion, index) => (
           <button
             key={index}
@@ -461,10 +461,10 @@ export default function SearchBar({
               onSearch(suggestion);
             }}
             disabled={isLoading}
-            className="px-3 py-1 text-sm bg-white/5 hover:bg-white/10 
-                       text-white/60 hover:text-white
-                       border border-white/10 rounded-full
-                       transition-all duration-200
+            className="px-3 py-1 text-sm glass-subtle
+                       text-arc-slate-light hover:text-arc-slate
+                       rounded-full
+                       transition-all duration-200 card-hover
                        disabled:opacity-50"
           >
             {suggestion}

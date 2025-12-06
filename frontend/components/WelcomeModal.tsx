@@ -47,136 +47,74 @@ export default function WelcomeModal() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={handleBackdropClick}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 pt-20 bg-black/70 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 pt-20 bg-arc-slate/30 backdrop-blur-sm"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: 'spring', duration: 0.5 }}
-            className="relative max-w-2xl w-full max-h-[85vh] overflow-y-auto glass rounded-2xl p-8 shadow-2xl"
+            className="relative max-w-2xl w-full max-h-[85vh] overflow-y-auto glass-solid rounded-3xl p-8 shadow-glass-lg"
           >
             {/* Header */}
             <div className="text-center mb-6">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-arc-teal to-arc-teal-dark flex items-center justify-center shadow-button">
+                <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
               <h2 className="text-3xl font-display font-bold gradient-text mb-2">
                 Welcome to Yalie Search
               </h2>
-              {/* <p className="text-white/70 text-lg">
-                AI-powered semantic search for the Yale community 
-              </p> */}
             </div>
 
             {/* Content */}
-            <div className="space-y-6 text-white/80">
+            <div className="space-y-6 text-arc-slate-light">
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-white flex items-start gap-2">
-                  <svg className="w-5 h-5 mt-0.5 flex-shrink-0 text-yale-blue" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
+                <h3 className="text-lg font-semibold text-arc-slate flex items-start gap-2">
+                  <div className="w-6 h-6 rounded-lg bg-arc-teal/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg className="w-4 h-4 text-arc-teal" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    </svg>
+                  </div>
                   Important Guidelines
                 </h3>
 
-                <ul className="space-y-3 ml-7">
+                <ul className="space-y-3 ml-8">
                   <li className="flex items-start gap-3">
-                    <span className="text-yale-blue-light font-semibold flex-shrink-0">•</span>
+                    <span className="text-arc-teal font-semibold flex-shrink-0">•</span>
                     <div>
-                      <span className="font-semibold text-white">Usage Policy:</span> This tool is built for educational and social purposes. 
+                      <span className="font-semibold text-arc-slate">Usage Policy:</span> This tool is built for educational and social purposes. 
                       Malicious or inappropriate use may result in access restrictions.
                     </div>
                   </li>
 
                   <li className="flex items-start gap-3">
-                    <span className="text-yale-blue-light font-semibold flex-shrink-0">•</span>
+                    <span className="text-arc-teal font-semibold flex-shrink-0">•</span>
                     <div>
-                      <span className="font-semibold text-white">Search Tips:</span> More specific queries yield better results. 
+                      <span className="font-semibold text-arc-slate">Search Tips:</span> More specific queries yield better results. 
                       Low match percentages do not indicate errors; search relevance considers multiple factors.
                     </div>
                   </li>
 
                   <li className="flex items-start gap-3">
-                    <span className="text-yale-blue-light font-semibold flex-shrink-0">•</span>
+                    <span className="text-arc-teal font-semibold flex-shrink-0">•</span>
                     <div>
-                      <span className="font-semibold text-white">Search History & Analytics:</span> Only minimal, anonymous logs are collected for performance and analytics. 
+                      <span className="font-semibold text-arc-slate">Search History & Analytics:</span> Only minimal, anonymous logs are collected for performance and analytics. 
                       No personally identifiable search history is stored. Users can enable Anonymous Mode to prevent contribution to aggregated analytics.
                     </div>
                   </li>
 
                   <li className="flex items-start gap-3">
-                    <span className="text-yale-blue-light font-semibold flex-shrink-0">•</span>
+                    <span className="text-arc-teal font-semibold flex-shrink-0">•</span>
                     <div>
-                      <span className="font-semibold text-white">Data Privacy:</span> All searches use only directory data accessible to authenticated Yale users. 
+                      <span className="font-semibold text-arc-slate">Data Privacy:</span> All searches use only directory data accessible to authenticated Yale users. 
                       No data is shared with external parties.
                     </div>
                   </li>
                 </ul>
               </div>
             </div>
-
-            {/* OLD CONTENT - COMMENTED OUT - Can be restored if needed
-            <div className="space-y-6 text-white/80">
-              <p className="text-white/90 leading-relaxed">
-                This tool uses AI-powered semantic search to help you find Yale students 
-                by describing them in natural language.
-              </p>
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-white flex items-start gap-2">
-                  <svg className="w-5 h-5 mt-0.5 flex-shrink-0 text-yale-blue" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                  </svg>
-                  Important Guidelines
-                </h3>
-
-                <ul className="space-y-3 ml-7">
-                  <li className="flex items-start gap-3">
-                    <span className="text-yale-blue-light font-semibold flex-shrink-0">•</span>
-                    <div>
-                      <span className="font-semibold text-white">Usage Policy:</span> This application is built for educational and social purposes. 
-                      Any malicious, defamatory, or inappropriate prompts will be monitored and 
-                      may result in access restrictions.
-                    </div>
-                  </li>
-
-                  <li className="flex items-start gap-3">
-                    <span className="text-yale-blue-light font-semibold flex-shrink-0">•</span>
-                    <div>
-                      <span className="font-semibold text-white">Search Tips:</span> More specific and detailed descriptions yield better results. 
-                      Lower match percentages don't necessarily indicate poor matches—our AI 
-                      considers many factors beyond simple similarity scores.
-                    </div>
-                  </li>
-
-                  <li className="flex items-start gap-3">
-                    <span className="text-yale-blue-light font-semibold flex-shrink-0">•</span>
-                    <div>
-                      <span className="font-semibold text-white">AI Limitations:</span> This system uses machine learning and may occasionally 
-                      produce inaccurate results. We are not responsible for misidentifications 
-                      or misclassifications in search results.
-                    </div>
-                  </li>
-
-                  <li className="flex items-start gap-3">
-                    <span className="text-yale-blue-light font-semibold flex-shrink-0">•</span>
-                    <div>
-                      <span className="font-semibold text-white">Search History & Analytics:</span> Your search history is automatically 
-                      saved locally and used to generate aggregated analytics (e.g., trending searches). 
-                      You can manage your history using "Clear All" or remove individual entries with the 
-                      "X" button. To prevent your searches from contributing to analytics, enable 
-                      <span className="text-purple-300 font-medium"> Anonymous Mode</span> in the header before searching.
-                    </div>
-                  </li>
-
-                  <li className="flex items-start gap-3">
-                    <span className="text-yale-blue-light font-semibold flex-shrink-0">•</span>
-                    <div>
-                      <span className="font-semibold text-white">Data Privacy:</span> All searches are processed securely within the Yale 
-                      community. Search data is not shared with external third parties.
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            */}
 
             {/* Footer */}
             <div className="mt-8 space-y-4">
@@ -187,13 +125,13 @@ export default function WelcomeModal() {
                   id="dontShowAgain"
                   checked={dontShowAgain}
                   onChange={(e) => setDontShowAgain(e.target.checked)}
-                  className="w-4 h-4 rounded border-white/20 bg-white/5 text-yale-blue focus:ring-2 focus:ring-yale-blue-light cursor-pointer"
+                  className="w-4 h-4 rounded border-arc-teal/30 bg-white/60 text-arc-teal focus:ring-2 focus:ring-arc-teal/30 cursor-pointer"
                 />
                 <label
                   htmlFor="dontShowAgain"
-                  className="text-sm text-white/70 cursor-pointer select-none"
+                  className="text-sm text-arc-slate-light cursor-pointer select-none"
                 >
-                  Don't show this again
+                  Don&apos;t show this again
                 </label>
               </div>
 
@@ -201,10 +139,10 @@ export default function WelcomeModal() {
               <div className="flex justify-center">
                 <button
                   onClick={handleClose}
-                  className="px-8 py-3 bg-yale-blue hover:bg-yale-blue-light text-white font-semibold rounded-xl 
-                           transition-all duration-300 transform hover:scale-105 shadow-lg"
+                  className="px-8 py-3 btn-primary font-semibold rounded-xl 
+                           transition-all duration-300 transform hover:scale-105"
                 >
-                  Got it, let's search!
+                  Got it, let&apos;s search!
                 </button>
               </div>
             </div>
@@ -212,7 +150,7 @@ export default function WelcomeModal() {
             {/* Close button */}
             <button
               onClick={handleClose}
-              className="absolute top-4 right-4 p-2 text-white/40 hover:text-white/80 transition-colors"
+              className="absolute top-4 right-4 p-2 text-arc-slate-muted hover:text-arc-slate transition-colors rounded-lg hover:bg-arc-slate/5"
               aria-label="Close"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -225,4 +163,3 @@ export default function WelcomeModal() {
     </AnimatePresence>
   );
 }
-

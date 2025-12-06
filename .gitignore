@@ -58,3 +58,6 @@ yarn-error.log*
 # Runtime persistent data (created by app, not committed)
 backend/persistent/
 
+# SpecStory auto-generated files (may contain secrets)
+*SpecStory*.md
+

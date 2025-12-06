@@ -67,7 +67,7 @@ export default function FilterBar({
   if (loading) {
     return (
       <div className="w-full max-w-3xl mx-auto mt-4">
-        <div className="h-10 bg-white/5 rounded-xl animate-pulse" />
+        <div className="h-10 glass-subtle rounded-xl shimmer" />
       </div>
     );
   }
@@ -81,8 +81,8 @@ export default function FilterBar({
           disabled={disabled}
           className={`px-4 py-2 text-sm rounded-xl transition-all duration-200 inline-flex items-center gap-2 ${
             isExpanded || activeFilterCount > 0
-              ? 'bg-yale-blue/20 text-yale-blue-light border border-yale-blue/30'
-              : 'bg-white/5 text-white/60 border border-white/10 hover:bg-white/10'
+              ? 'bg-arc-teal/15 text-arc-teal border border-arc-teal/25'
+              : 'bg-white/50 text-arc-slate-light border border-white/60 hover:bg-white/70'
           } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -91,7 +91,7 @@ export default function FilterBar({
           </svg>
           Filters
           {activeFilterCount > 0 && (
-            <span className="px-1.5 py-0.5 text-xs bg-yale-blue rounded-full">
+            <span className="px-1.5 py-0.5 text-xs bg-arc-teal text-white rounded-full">
               {activeFilterCount}
             </span>
           )}
@@ -108,7 +108,7 @@ export default function FilterBar({
           <button
             onClick={clearAllFilters}
             disabled={disabled}
-            className="px-3 py-2 text-sm text-white/50 hover:text-red-400 transition-colors"
+            className="px-3 py-2 text-sm text-arc-slate-muted hover:text-arc-coral transition-colors"
           >
             Clear all
           </button>
@@ -125,11 +125,11 @@ export default function FilterBar({
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="mt-4 p-4 bg-white/5 border border-white/10 rounded-xl">
+            <div className="mt-4 p-4 glass-solid rounded-2xl">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* College Filter */}
                 <div>
-                  <label className="block text-xs text-white/50 mb-2 uppercase tracking-wider">
+                  <label className="block text-xs text-arc-slate-muted mb-2 uppercase tracking-wider">
                     College
                   </label>
                   <select
@@ -139,9 +139,9 @@ export default function FilterBar({
                       college: e.target.value || null
                     })}
                     disabled={disabled}
-                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg 
-                             text-white text-sm focus:outline-none focus:border-yale-blue-light
-                             disabled:opacity-50"
+                    className="w-full px-3 py-2 bg-white/60 border border-white/80 rounded-xl 
+                             text-arc-slate text-sm focus:outline-none focus:border-arc-teal focus:ring-2 focus:ring-arc-teal/20
+                             disabled:opacity-50 cursor-pointer transition-all"
                   >
                     <option value="">All Colleges</option>
                     {options.colleges.map((college) => (
@@ -152,7 +152,7 @@ export default function FilterBar({
 
                 {/* Year Filter */}
                 <div>
-                  <label className="block text-xs text-white/50 mb-2 uppercase tracking-wider">
+                  <label className="block text-xs text-arc-slate-muted mb-2 uppercase tracking-wider">
                     Class Year
                   </label>
                   <select
@@ -162,9 +162,9 @@ export default function FilterBar({
                       year: e.target.value ? parseInt(e.target.value) : null
                     })}
                     disabled={disabled}
-                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg 
-                             text-white text-sm focus:outline-none focus:border-yale-blue-light
-                             disabled:opacity-50"
+                    className="w-full px-3 py-2 bg-white/60 border border-white/80 rounded-xl 
+                             text-arc-slate text-sm focus:outline-none focus:border-arc-teal focus:ring-2 focus:ring-arc-teal/20
+                             disabled:opacity-50 cursor-pointer transition-all"
                   >
                     <option value="">All Years</option>
                     {options.years.map((year) => (
@@ -175,7 +175,7 @@ export default function FilterBar({
 
                 {/* Major Filter */}
                 <div>
-                  <label className="block text-xs text-white/50 mb-2 uppercase tracking-wider">
+                  <label className="block text-xs text-arc-slate-muted mb-2 uppercase tracking-wider">
                     Major
                   </label>
                   <select
@@ -185,9 +185,9 @@ export default function FilterBar({
                       major: e.target.value || null
                     })}
                     disabled={disabled}
-                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg 
-                             text-white text-sm focus:outline-none focus:border-yale-blue-light
-                             disabled:opacity-50"
+                    className="w-full px-3 py-2 bg-white/60 border border-white/80 rounded-xl 
+                             text-arc-slate text-sm focus:outline-none focus:border-arc-teal focus:ring-2 focus:ring-arc-teal/20
+                             disabled:opacity-50 cursor-pointer transition-all"
                   >
                     <option value="">All Majors</option>
                     {options.majors.map((major) => (
@@ -209,12 +209,12 @@ export default function FilterBar({
           className="flex flex-wrap gap-2 mt-3 justify-center"
         >
           {filters.college && (
-            <span className="px-3 py-1 text-xs bg-yale-blue/20 text-yale-blue-light 
-                           rounded-full inline-flex items-center gap-1">
+            <span className="px-3 py-1 text-xs bg-arc-teal/15 text-arc-teal-dark 
+                           rounded-full inline-flex items-center gap-1 border border-arc-teal/20">
               {filters.college}
               <button 
                 onClick={() => onFiltersChange({ ...filters, college: null })}
-                className="hover:text-white"
+                className="hover:text-arc-coral"
               >
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -223,12 +223,12 @@ export default function FilterBar({
             </span>
           )}
           {filters.year && (
-            <span className="px-3 py-1 text-xs bg-yale-blue/20 text-yale-blue-light 
-                           rounded-full inline-flex items-center gap-1">
+            <span className="px-3 py-1 text-xs bg-arc-teal/15 text-arc-teal-dark 
+                           rounded-full inline-flex items-center gap-1 border border-arc-teal/20">
               Class of {filters.year}
               <button 
                 onClick={() => onFiltersChange({ ...filters, year: null })}
-                className="hover:text-white"
+                className="hover:text-arc-coral"
               >
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -237,12 +237,12 @@ export default function FilterBar({
             </span>
           )}
           {filters.major && (
-            <span className="px-3 py-1 text-xs bg-yale-blue/20 text-yale-blue-light 
-                           rounded-full inline-flex items-center gap-1 max-w-[200px] truncate">
+            <span className="px-3 py-1 text-xs bg-arc-teal/15 text-arc-teal-dark 
+                           rounded-full inline-flex items-center gap-1 max-w-[200px] truncate border border-arc-teal/20">
               {filters.major}
               <button 
                 onClick={() => onFiltersChange({ ...filters, major: null })}
-                className="hover:text-white flex-shrink-0"
+                className="hover:text-arc-coral flex-shrink-0"
               >
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -255,4 +255,3 @@ export default function FilterBar({
     </div>
   );
 }
-
